@@ -5,7 +5,8 @@ const restaurantName = document.getElementById('restaurantName')
 const detailImg = document.getElementById('detail-image')
 const ratingDisplay = document.getElementById('rating-display')
 const commentDisplay = document.getElementById('comment-display')
-const form = document.querySelector('form')
+const newForm = document.getElementById('new-ramen')
+const editForm = document.getElementById('edit-ramen')
 
 //this renders the Ramen menu bar
 function renderRamenMenu(noods){
@@ -14,9 +15,7 @@ function renderRamenMenu(noods){
         img.src = ramen.image
         img.alt = ramen.name
         //this adds an event listener to the cards
-        img.addEventListener('click',()=>{
-            renderRestaurant(ramen)
-        });
+        img.addEventListener('click',()=>renderRestaurant(ramen));
         divRamenMenu.appendChild(img)
     });
 };
@@ -33,6 +32,7 @@ function renderRestaurant(ramen){
 
 //this will handle the inputs of the form and put them in the menu bar
 function handleInput(e){
+    //get values from form
     let newName = e.target['new-name'].value
     let newRestaurant = e.target['new-restaurant'].value
     let newImage = e.target['new-image'].value
@@ -49,6 +49,20 @@ function handleInput(e){
     let newArray = [newObj]
     renderRamenMenu(newArray)
     renderRestaurant(newObj);
+}
+
+function updateValues(e){
+    let editRating = e.target['edit-rating'].value
+    let editComment = e.target['edit-comment'].value
+    let editObj = {}
+
+        editObj[`name`]= ramenName.textContent
+        editObj[`restaurant`]= restaurantName.textContent
+        editObj[`image`]= detailImg.src
+        editObj[`rating`]= `${editRating}`
+        editObj[`comment`]= `${editComment}`
+    
+    renderRestaurant(editObj)
 }
 
 /// Fetch requests
@@ -70,9 +84,13 @@ function defaultImage(){
 function init(){
     fetchRamen()
     defaultImage()
-    form.addEventListener('submit',(e)=>{
+    newForm.addEventListener('submit',(e)=>{
         e.preventDefault()
         handleInput(e)
+    })
+    editForm.addEventListener('submit',(e)=>{
+        e.preventDefault()
+        updateValues(e)
     })
 }
 
